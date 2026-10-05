@@ -23,6 +23,7 @@ const SHARE_PANEL_STATE_SPECS = Object.freeze([
 /** Standard map-view panels cleared out of the way on a fresh Cockpit entry. */
 const COCKPIT_ENTRY_COLLAPSE_PANEL_IDS = Object.freeze([
   'data-panel',
+  'overlay-panel',
   'cctv-panel',
   'weather-panel',
   'recent-imagery-panel',

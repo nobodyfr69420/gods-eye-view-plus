@@ -367,6 +367,36 @@ Honesty labels:
 
 ---
 
+## Overlay Library sources
+
+The OVERLAYS panel (`src/overlayLibrary/`, catalog in [docs/OVERLAYS.md](docs/OVERLAYS.md)) reads only keyless public sources. Data feeds are fetched by the local `/api/overlay-feed/<id>` proxy, which accepts only the feed ids allowlisted in `server/providers/overlayFeeds/feeds.js`, identifies itself with a `gods-eye-view` User-Agent, caches every upstream (live feeds for minutes, reference datasets for a week on disk under `.gev-cache/overlay-feeds/`) and shares one download between overlays. Imagery and OpenFreeMap tiles are requested by the browser, like the existing base maps. Each overlay's details card names its source.
+
+| Source | Used for | License / terms | Attribution |
+| --- | --- | --- | --- |
+| **NASA EONET** | Natural-event overlays (13 categories) | NASA open data | NASA Earth Observatory Natural Event Tracker |
+| **GDACS** | Disaster alerts (EQ, TC, FL, VO, DR, WF) | GDACS terms; free reuse with attribution | GDACS, a cooperation framework of the UN and the European Commission |
+| **USGS** Earthquake Hazards & Volcano Hazards Programs | Significant / M4.5+ / M2.5+ earthquakes; US volcano alert levels | US public domain | U.S. Geological Survey |
+| **Smithsonian Global Volcanism Program** | Holocene volcanoes | GVP terms of use (cite) | Global Volcanism Program, Smithsonian Institution |
+| **NOAA NCEI HazEL** | Historical tsunamis, damaging earthquakes, significant eruptions | US public domain | NOAA National Centers for Environmental Information |
+| **NOAA NWS / SPC / AWC / NDBC / CO-OPS / NWPS / SWPC** | Alerts, convective outlooks, SIGMETs, METARs, PIREPs, buoys, tide gauges, flood gauges, aurora forecast, planetary K-index | US public domain | NOAA (named per overlay) |
+| **Sensor.Community** | Citizen PM2.5 / PM10 and temperature sensors | ODbL 1.0 | Sensor.Community contributors |
+| **NASA GIBS** | 40 imagery layers (MODIS, VIIRS, GOES, Himawari, IMERG, GHRSST, SMAP, OMI/OMPS/TROPOMI, MOPITT, AIRS, ASTER GDEM, GPW, Black Marble…) | NASA open data; product citations apply | NASA EOSDIS GIBS |
+| **WRI Global Power Plant Database** | Power plants by fuel | CC BY 4.0 | World Resources Institute |
+| **OurAirports** | Airports, heliports, seaplane bases, closed airfields, navaids | Public domain | OurAirports |
+| **Natural Earth** | Places, capitals, ports, borders, time zones, physical features, country indicators | Public domain | Natural Earth |
+| **PB2002 (Bird 2003)** via fraxen/tectonicplates | Plate boundaries and orogens | ODC-BY 1.0 | Bird, P. (2003), G³ 4(3); Hugo Ahlenius |
+| **OpenStreetMap via OpenFreeMap** | 90+ OSM overlays (POIs, transport, land use, boundaries, buildings) | ODbL 1.0 | © OpenStreetMap contributors · OpenFreeMap |
+| **OpenRailwayMap** | Railway tiles (standard, max speed, electrification, signals) | CC BY-SA 2.0 tiles; data ODbL; non-commercial use of the public tile server | © OpenRailwayMap, © OpenStreetMap contributors |
+| **Waymarked Trails** | Hiking, cycling, MTB, ski, riding and skating routes | CC BY-SA 3.0 tiles; data ODbL | Waymarked Trails, © OpenStreetMap contributors |
+| **OpenSeaMap** | Sea marks | CC BY-SA 2.0 | OpenSeaMap, © OpenStreetMap contributors |
+| **OpenTopoMap** | Topographic map | CC BY-SA 3.0; fair-use tile server | OpenTopoMap, © OpenStreetMap contributors, SRTM |
+| **CARTO basemaps** | Label-only tiles | CARTO basemap terms (free for non-commercial use within limits) | © CARTO, © OpenStreetMap contributors |
+| **Esri** | Hillshade, ocean, transportation and boundaries reference tiles | Esri terms of use | Esri and its data providers |
+| **USGS The National Map** | US topo and hydrography tiles | US public domain | USGS The National Map |
+| **Wikipedia** | Articles near the view center (geosearch) | CC BY-SA 4.0 | Wikipedia contributors |
+
+Sun, moon, terminator, twilight, grids, range rings and the horizon are computed in the browser and use no external data.
+
 ## In-app attribution
 
 The required Google Maps / Cesium credit renders on the on-globe credit line (`#cesium-credits`, bottom-left) and must stay visible — including in clean-view and recording modes (the whole line, logo + "Google Maps" + the "Data attribution" link, stays on screen; only the GEV panels/HUD fade). The layer-specific credits (adsb.lol, adsbdb, TeleGeography, OSM datacenters/dams/roads, NASA FIRMS, CelesTrak, USGS, City of Austin, Fintraffic, GBFS, Radio Browser, OpenSky, AISStream) are registered into the expandable **"Data attribution"** popover on that credit line via `viewer.creditDisplay.addStaticCredit(new Cesium.Credit(html, /* showOnScreen */ false))` — see `src/data/dataCredits.js`. When you add a new data source, add its license and attribution to this file **and** append an entry to `DATA_CREDITS` in `src/data/dataCredits.js` so it surfaces in the app.

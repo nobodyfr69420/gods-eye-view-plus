@@ -75,6 +75,7 @@ Start with the included data sources, then add your own. Each layer is a separat
 - **🧭 Tilt and North Up:** Switch between straight-down and a 35° oblique, or put north at the top, while a tracked target stays centered.
 - **🔍 Keyless search:** Type coordinates or a bundled city or landmark to fly there with no network request; other names use Google when configured, then Photon and Nominatim.
 - **📦 Shareable scenes:** Import, preview and share Director scenes as files or bundles, with camera anchors, authored moves and data packs.
+- **🗂️ Overlay Library — 286 overlays + STATS:** A searchable OVERLAYS panel with 286 keyless overlays in 18 categories (hazards, weather, air quality, oceans, terrain, night lights, power plants, airports and navaids, rail and trails, hospitals to embassies, borders, time zones, grids, sun, moon and aurora), click-for-details cards, and a STATS tab with live app-wide numbers, trends and breakdowns. Press `L`. → [docs/OVERLAYS.md](docs/OVERLAYS.md)
 - **🌊 Nepal flood scene:** Replay the Bhote Koshi flood: flood path, witness sources and before-and-after imagery (bundled data is non-commercial; see [DATA_SOURCES.md](DATA_SOURCES.md)).
 
 ---
@@ -326,6 +327,28 @@ _The Space Missions layer replaying a Falcon 9 ascent — labeled `RECONSTRUCTED
 **Also on the globe:** neighborhood overlays · an optional cockpit WX cloud effect. **Bundled static infrastructure:** Datacenters (4,351), Dams (704), and Submarine Cables (712).
 
 ![Diving into the Bahamas and revealing labeled submarine cable routes beneath the globe](docs/media/09-undersea-cables.gif)
+
+### 🗂️ The Overlay Library — 286 more, all keyless
+
+The **OVERLAYS** panel (left rail, or press **`L`**) adds **286 overlays** on top of the layers above — **108 live and reference data feeds, 67 imagery layers, 93 OpenStreetMap layers and 18 computed layers**, in 18 categories. Search them, filter by type (Live · Imagery · Data · OSM · Computed · ★ favorites), open a row for its description, source, legend and opacity slider, and click anything they draw for a details card.
+
+| Category | A taste of what's inside |
+| --- | --- |
+| △ Hazards & Disasters | NASA EONET events (13 categories), GDACS alerts (6), USGS significant / M4.5+ / M2.5+ quakes, US volcano alert levels, 1,300 Holocene volcanoes, historical tsunamis and eruptions, river gauges in flood, tectonic plates |
+| ☁ Weather & Storms | NWS warnings by type (11), SPC severe outlooks (6), SIGMETs, METAR flight categories, PIREPs, ocean buoys, GOES/Himawari imagery, IMERG precipitation |
+| ◌ Air Quality & Atmosphere | PM2.5 / PM10 citizen sensors, NO₂, CO, SO₂, ozone, aerosols, dust |
+| ≈ Oceans, Ice & Water | Sea-surface temperature and anomaly, chlorophyll, sea ice, glaciers, reefs, continental shelf, tide gauges, sea marks |
+| ▲ Land & Terrain | NDVI, land cover, soil moisture, snow, land-surface temperature, hillshade, topo maps, peaks, protected areas |
+| ◐ Imagery & Night Lights | Yesterday's true-color mosaics, last night's lights, Black Marble, Blue Marble, Landsat, population density |
+| ϟ Energy & Industry | ~35,000 power plants by fuel (nuclear, coal, gas, hydro, solar, wind…), fuel and EV charging, industrial zones |
+| ✈ Aviation | Every airport class, heliports, seaplane bases, closed airfields, VOR/NDB/TACAN navaids, military airfields, runways |
+| ⇄ Rail, Road & Sea | OpenRailwayMap (4 views), hiking/cycling/MTB/ski trails, rail and transit lines, ferries, stations, bridges, tunnels, seaports |
+| ✚ ◆ ⌂ ★ ● | Hospitals, police, fire stations, embassies, prisons, border crossings, schools, universities, 3D building heights, museums, castles, stadiums, hotels, restaurants, shops and more (OSM, when zoomed in) |
+| ◉ ⌗ ⊞ ☼ | Capitals and megacities, country choropleths, borders, disputed areas, time zones, lat/lon, UTM and Maidenhead grids, range rings, horizon, the live terminator and twilight lines, sun and moon tracks, aurora forecast |
+
+The **STATS** tab (**`Shift+L`**) is a live dashboard for the whole app: overlays on and features drawn, objects per built-in layer, render rate, data loaded and errors; three-minute trends; a per-overlay breakdown (for example nuclear capacity by country); sun, moon and the planetary K-index; and camera, scene and network diagnostics, with JSON export.
+
+Data feeds go through one allowlisted local proxy (`/api/overlay-feed/<id>`) that caches every upstream, shares one download between overlays and serves the last good copy when a source is down. The full list, with sources, is in **[docs/OVERLAYS.md](docs/OVERLAYS.md)**; licenses are in [DATA_SOURCES.md](DATA_SOURCES.md#overlay-library-sources).
 
 **Missing a layer you want?** Open an issue — or add it and send the PR.
 

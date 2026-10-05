@@ -26,6 +26,23 @@
   largest cities) and `CCTV_VEGVESEN_VIDEO=0` keeps stills only. Attributed
   under NLOD 2.0.
 
+- Add the **Overlay Library**: an OVERLAYS panel on the left rail with 286
+  keyless overlays in 18 categories — 108 data feeds, 67 imagery layers,
+  93 OpenStreetMap layers and 18 computed layers — with search, type
+  filters, favorites, per-overlay opacity, legends and click-for-details
+  cards. Data feeds are served by a new allowlisted, cached
+  `/api/overlay-feed/<id>` proxy (`server/providers/overlayFeeds.js`) that
+  shares one upstream download between overlays, keeps static reference
+  datasets on disk for a week and serves the last good copy when a source is
+  down. OSM overlays reuse the keyless OpenFreeMap vector tiles. A render
+  error raised by overlay geometry turns the suspect overlay off and resumes
+  rendering instead of stopping the globe. Press `L` to open it.
+- Add a **STATS** tab: live app-wide numbers (overlays, features drawn,
+  objects per built-in layer, render rate, data loaded, errors), three-minute
+  trends, per-overlay breakdowns, sun and moon, the NOAA planetary K-index,
+  camera/scene/network diagnostics and JSON export. `Shift+L` opens it.
+- `node scripts/generate-overlay-docs.mjs` regenerates `docs/OVERLAYS.md`.
+
 ## [0.2.1] — 2026-10-02 — God's Eye View through Your Agent (with security fixes and other features)
 
 - Ship each bundled data pack once. The region, marine, admin-boundary,

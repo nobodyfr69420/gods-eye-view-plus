@@ -1,0 +1,1096 @@
+/* ═══════════════════════════════════════════════
+   OVERLAY LIBRARY — OVERLAYS panel (LIBRARY / ACTIVE / STATS) and the
+   feature info card. The panel shell mirrors the Scenes panel so the left
+   rail layout engine, the Cyber theme, clean view, recording and cockpit
+   modes treat it exactly like its siblings.
+   ═══════════════════════════════════════════════ */
+
+/* mirrored from scenes.css */
+#overlay-panel {
+  --panel-expanded-width: 340px;
+  position: fixed;
+  top: calc(var(--left-stack-top) + (var(--left-stack-gap) * 2));
+  left: var(--left-stack-x);
+  right: auto;
+  bottom: auto;
+  z-index: 100;
+  width: var(--panel-expanded-width);
+  max-height: calc(100vh - 24px);
+}
+
+#left-panel-stack > #overlay-panel {
+  position: relative;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  z-index: auto;
+  max-height: none;
+  flex: 0 0 auto;
+  min-height: 0;
+  pointer-events: auto;
+}
+
+#left-panel-stack > #overlay-panel {
+  order: 2;
+}
+
+#left-panel-stack > #overlay-panel:not(.collapsed) {
+  box-sizing: border-box;
+  flex: 0 1 var(--left-panel-allocated-height, auto);
+  height: var(--left-panel-allocated-height, auto);
+  max-height: var(--left-panel-allocated-height, 100%);
+}
+
+#left-panel-stack.layout-tail > :is(#overlay-panel):not(.collapsed) {
+  box-sizing: border-box;
+  flex: 0 0 var(--left-panel-allocated-height);
+  height: var(--left-panel-allocated-height);
+  max-height: var(--left-panel-allocated-height);
+}
+
+#left-panel-stack > #overlay-panel:not(.collapsed) .overlay-panel-inner {
+  height: 100%;
+  max-height: 100%;
+}
+
+#left-panel-stack > #overlay-panel:not(.collapsed) .overlay-panel-inner {
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+#overlay-panel .panel-glow {
+  position: absolute;
+  inset: -18px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 212, 255, 0.16) 0%,
+    transparent 65%
+  );
+  filter: blur(16px);
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.overlay-panel-inner {
+  position: relative;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--panel-radius);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 24px);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+    0 1px 0 rgba(255, 255, 255, 0.06) inset;
+}
+
+#overlay-panel.collapsed {
+  width: var(--left-collapsed-width);
+}
+
+#overlay-panel.collapsed .panel-title {
+  font-size: 8px;
+  letter-spacing: 1.8px;
+}
+
+#overlay-panel.collapsed .overlay-panel-inner {
+  padding-bottom: 10px;
+}
+
+#overlay-panel.collapsed .panel-header {
+  margin-bottom: 2px;
+}
+
+/* mirrored from cyber.css */
+:root[data-ui-theme='cyber'] :is(.overlay-panel-inner) {
+  border-radius: 0;
+  clip-path: var(--cyber-panel-frame);
+  box-shadow: var(--cyber-panel-shadow);
+}
+
+:root[data-ui-theme='cyber'] :is(.overlay-panel-inner) > .panel-header {
+  min-height: 28px;
+  gap: 9px;
+  padding: 0 2px 7px 8px;
+  border-bottom: 1px solid rgba(206, 222, 226, 0.08);
+}
+
+:root[data-ui-theme='cyber']
+  :is(.overlay-panel-inner)
+  > .panel-header
+  .panel-title {
+  position: relative;
+}
+
+:root[data-ui-theme='cyber']
+  :is(.overlay-panel-inner)
+  > .panel-header
+  .panel-title::before {
+  position: absolute;
+  top: 50%;
+  left: -8px;
+  width: 3px;
+  height: 11px;
+  background: var(--cyber-red);
+  clip-path: polygon(0 0, 100% 2px, 100% calc(100% - 2px), 0 100%);
+  content: '';
+  transform: translateY(-50%);
+}
+
+:root[data-ui-theme='cyber']
+  :is(.overlay-panel-inner)
+  > .panel-header
+  .panel-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(196, 84, 84, 0.62),
+    rgba(206, 222, 226, 0.08)
+  );
+}
+
+@media (min-width: 961px) and (min-height: 650px) {
+  :root[data-ui-theme='cyber']
+    body:not(.cockpit-mode)
+    #left-panel-stack:has(> [data-panel-id]:not(.collapsed))
+    > :is(#overlay-panel):not(.collapsed) {
+    flex: 1 1 auto;
+    height: auto;
+    max-height: none;
+  }
+  :root[data-ui-theme='cyber'] #left-panel-stack > :is(#overlay-panel) {
+    --panel-expanded-width: 320px;
+    width: var(--panel-expanded-width);
+  }
+  :root[data-ui-theme='cyber']
+    #left-panel-stack
+    > :is(#overlay-panel).collapsed {
+    width: var(--cyber-panel-collapsed-width);
+  }
+  :root[data-ui-theme='cyber']
+    #left-panel-stack
+    > :is(#overlay-panel).collapsed
+    :is(.overlay-panel-inner) {
+    box-sizing: border-box;
+    height: 50px;
+    min-height: 50px;
+    overflow: hidden;
+  }
+  :root[data-ui-theme='cyber']
+    body:not(.cockpit-mode)
+    :is(#overlay-panel)
+    .panel-collapse-btn {
+    width: var(--cyber-panel-control-size);
+    min-width: var(--cyber-panel-control-size);
+    height: var(--cyber-panel-control-size);
+  }
+}
+
+/* mirrored from responsive.css */
+@media (max-width: 720px) {
+  #overlay-panel {
+    top: auto;
+    right: 16px;
+    left: 16px;
+    width: auto;
+    bottom: 12px;
+  }
+  #overlay-panel.collapsed {
+    width: auto;
+  }
+  #left-panel-stack > #overlay-panel,
+  #left-panel-stack > #overlay-panel.collapsed {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    width: 100%;
+  }
+}
+
+/* mirrored from controls.css */
+body.ui-clean-view #overlay-panel {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* mirrored from cockpit.css */
+body.cockpit-mode #left-panel-stack > #overlay-panel {
+  display: none !important;
+}
+
+/* mirrored from recording.css */
+body.recording-mode #overlay-panel {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* ── Panel body ─────────────────────────────── */
+/* The panel's inner surface scrolls (like its siblings); its header and the
+   tab strip stay pinned with an opaque backing so content never shows
+   through them. */
+#left-panel-stack > #overlay-panel:not(.collapsed) .panel-header {
+  background: rgba(12, 13, 22, 0.97);
+  box-shadow: 0 -14px 0 0 rgba(12, 13, 22, 0.97);
+}
+
+#overlay-panel.collapsed .ovl-root {
+  display: none;
+}
+
+#left-panel-stack > #overlay-panel:not(.collapsed) .overlay-panel-inner {
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 212, 255, 0.5) rgba(255, 255, 255, 0.04);
+}
+
+.ovl-root {
+  --ovl-surface: rgba(255, 255, 255, 0.035);
+  --ovl-hairline: rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+}
+
+.ovl-tabs {
+  position: sticky;
+  top: var(--ovl-sticky-top, 30px);
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 4px;
+  margin: 0 -2px;
+  background: rgba(12, 13, 22, 0.97);
+  box-shadow: 0 -8px 0 0 rgba(12, 13, 22, 0.97);
+  border: 1px solid var(--ovl-hairline);
+  border-radius: 8px;
+}
+
+.ovl-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 4px 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1.4px;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.ovl-tab:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.ovl-tab.active {
+  color: var(--accent);
+  border-color: rgba(0, 212, 255, 0.45);
+  background: var(--accent-dim);
+}
+
+.ovl-tab-badge {
+  font-size: 9px;
+  color: var(--text-dim);
+}
+
+.ovl-tab.active .ovl-tab-badge {
+  color: var(--text-secondary);
+}
+
+.ovl-tabpanel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+}
+
+.ovl-tabpanel[hidden] {
+  display: none;
+}
+
+.ovl-search {
+  width: 100%;
+  padding: 8px 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-primary);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--ovl-hairline);
+  border-radius: 6px;
+  outline: none;
+}
+
+.ovl-search:focus {
+  border-color: rgba(0, 212, 255, 0.55);
+}
+
+.ovl-search::placeholder {
+  color: var(--text-dim);
+}
+
+.ovl-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.ovl-chip,
+.ovl-mini-btn {
+  padding: 3px 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.6px;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--ovl-hairline);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ovl-chip:hover,
+.ovl-mini-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--glass-border-hover);
+}
+
+.ovl-chip[aria-pressed='true'] {
+  color: var(--accent);
+  border-color: rgba(0, 212, 255, 0.55);
+  background: var(--accent-dim);
+}
+
+.ovl-mini-btn.ovl-danger:hover {
+  color: #ff8a8a;
+  border-color: rgba(255, 90, 90, 0.5);
+}
+
+.ovl-summary,
+.ovl-footnote {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.4px;
+  color: var(--text-secondary);
+}
+
+.ovl-footnote {
+  margin-top: 4px;
+  line-height: 1.45;
+}
+
+.ovl-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ovl-group {
+  border-top: 1px solid var(--ovl-hairline);
+}
+
+.ovl-group[hidden] {
+  display: none;
+}
+
+.ovl-group-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 4px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.ovl-group-head::-webkit-details-marker {
+  display: none;
+}
+
+.ovl-group-head::after {
+  content: '▸';
+  margin-left: 2px;
+  font-size: 10px;
+  color: var(--text-dim);
+  transition: transform var(--transition-fast);
+}
+
+.ovl-group[open] > .ovl-group-head::after {
+  transform: rotate(90deg);
+}
+
+.ovl-group-glyph {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
+  color: var(--ovl-accent, var(--accent));
+}
+
+.ovl-group-name {
+  flex: 1;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.ovl-group.has-active .ovl-group-name {
+  color: var(--text-primary);
+}
+
+.ovl-group-count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+.ovl-group.has-active .ovl-group-count {
+  color: var(--accent);
+}
+
+.ovl-group-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding-bottom: 6px;
+}
+
+.ovl-row[hidden] {
+  display: none;
+}
+
+.ovl-row .data-toggle-top {
+  min-width: 0;
+}
+
+.ovl-row .data-toggle-left {
+  min-width: 0;
+  flex: 1 1 auto;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.ovl-row .data-name {
+  overflow: hidden;
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ovl-row .data-toggle-right {
+  flex: 0 0 auto;
+  gap: 6px;
+}
+
+.ovl-row .data-count {
+  min-width: 26px;
+}
+
+.ovl-row .ovl-meta {
+  margin-top: 2px;
+  padding-left: 18px;
+  font-size: 9.5px;
+}
+
+.ovl-row.is-on {
+  background: rgba(0, 212, 255, 0.045);
+}
+
+.ovl-swatch {
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ovl-color, var(--accent));
+  box-shadow: 0 0 0 2px rgba(10, 12, 20, 0.9);
+}
+
+.ovl-swatch[data-kind='imagery'] {
+  border-radius: 2px;
+}
+
+.ovl-swatch[data-kind='computed'] {
+  border-radius: 1px;
+  transform: rotate(45deg) scale(0.85);
+}
+
+.ovl-swatch[data-kind='osm'] {
+  background: transparent;
+  box-shadow: inset 0 0 0 2px var(--ovl-color, var(--accent));
+}
+
+.ovl-swatch-sm {
+  width: 8px;
+  height: 8px;
+}
+
+.ovl-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 8px 0 4px 18px;
+  padding: 8px 10px;
+  background: var(--ovl-surface);
+  border: 1px solid var(--ovl-hairline);
+  border-radius: 6px;
+}
+
+.ovl-active-row .ovl-details {
+  margin-left: 0;
+}
+
+.ovl-desc {
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.ovl-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+}
+
+.ovl-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+.ovl-legend-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--ovl-color);
+}
+
+.ovl-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+
+.ovl-fact {
+  display: inline-flex;
+  gap: 5px;
+  font-size: 10.5px;
+}
+
+.ovl-fact-label {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.ovl-fact-value {
+  color: var(--text-secondary);
+}
+
+.ovl-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.ovl-opacity {
+  display: inline-flex;
+  flex: 1 1 140px;
+  align-items: center;
+  gap: 6px;
+}
+
+.ovl-slider {
+  flex: 1;
+  min-width: 60px;
+  accent-color: var(--accent);
+}
+
+.ovl-slider-value {
+  min-width: 34px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-align: right;
+  color: var(--text-secondary);
+}
+
+.ovl-status-line {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+.ovl-active-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ovl-active-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ovl-empty {
+  padding: 10px 4px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* ── STATS tab ──────────────────────────────── */
+.ovl-tabpanel[data-tab='stats'] {
+  gap: 10px;
+}
+
+.ovl-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.ovl-tile {
+  min-width: 0;
+  padding: 8px 10px;
+  background: var(--ovl-surface);
+  border: 1px solid var(--ovl-hairline);
+  border-radius: 6px;
+}
+
+.ovl-tile-label {
+  font-size: 10.5px;
+  color: var(--text-secondary);
+}
+
+.ovl-tile-value {
+  margin-top: 2px;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+}
+
+.ovl-tile-sub {
+  margin-top: 1px;
+  overflow: hidden;
+  font-size: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--text-dim);
+}
+
+.ovl-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  background: var(--ovl-surface);
+  border: 1px solid var(--ovl-hairline);
+  border-radius: 6px;
+}
+
+.ovl-card-title {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.ovl-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ovl-bar-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'label value'
+    'track track';
+  gap: 3px 8px;
+  align-items: center;
+}
+
+.ovl-bar-label {
+  grid-area: label;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: 11px;
+  color: var(--text-primary);
+}
+
+.ovl-bar-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ovl-bar-note {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--text-dim);
+}
+
+.ovl-bar-value {
+  grid-area: value;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+.ovl-bar-track {
+  grid-area: track;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0 4px 4px 0;
+}
+
+.ovl-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 0 4px 4px 0;
+  opacity: 0.85;
+}
+
+.ovl-bar-row:hover .ovl-bar-fill {
+  opacity: 1;
+}
+
+.ovl-spark {
+  position: relative;
+}
+
+.ovl-spark-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 10.5px;
+  color: var(--text-secondary);
+}
+
+.ovl-spark-value {
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+
+.ovl-spark-svg {
+  display: block;
+  width: 100%;
+  height: 46px;
+  margin-top: 2px;
+  overflow: visible;
+}
+
+.ovl-spark-base {
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 1;
+}
+
+.ovl-spark-area {
+  fill: rgba(0, 212, 255, 0.1);
+}
+
+.ovl-spark-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.ovl-spark-dot {
+  fill: var(--accent);
+  stroke: #0b0f18;
+  stroke-width: 2;
+}
+
+.ovl-spark-cross {
+  stroke: rgba(255, 255, 255, 0.35);
+  stroke-width: 1;
+}
+
+.ovl-tooltip {
+  position: absolute;
+  top: 0;
+  z-index: 3;
+  padding: 3px 7px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  white-space: nowrap;
+  color: var(--text-secondary);
+  background: var(--menu-bg);
+  border: 1px solid var(--ovl-hairline);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.ovl-tooltip strong {
+  color: var(--text-primary);
+}
+
+.ovl-columns {
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+  width: 100%;
+}
+
+.ovl-column {
+  flex: 1;
+  min-width: 2px;
+  background: var(--ovl-color);
+  border-radius: 2px 2px 0 0;
+  opacity: 0.85;
+}
+
+.ovl-column:hover {
+  opacity: 1;
+}
+
+.ovl-kp {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.ovl-kp strong {
+  color: var(--text-primary);
+}
+
+.ovl-status-dot {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ovl-color);
+}
+
+.ovl-factgrid {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 4px 10px;
+  margin: 0;
+  font-size: 11px;
+}
+
+.ovl-factgrid dt {
+  color: var(--text-dim);
+}
+
+.ovl-factgrid dd {
+  margin: 0;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  text-align: right;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+}
+
+.ovl-select {
+  width: 100%;
+  padding: 6px 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-primary);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--ovl-hairline);
+  border-radius: 6px;
+}
+
+.ovl-log {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ovl-log li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.ovl-log-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+}
+
+.ovl-log-meta {
+  margin-left: auto;
+  flex: 0 0 auto;
+  color: var(--text-dim);
+}
+
+.ovl-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ── Feature info card ──────────────────────── */
+.ovl-info-card {
+  position: fixed;
+  z-index: 140;
+  width: min(320px, calc(100vw - 32px));
+  max-height: min(70vh, 520px);
+  overflow-y: auto;
+  padding: 12px 14px;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background: var(--glass-bg);
+  border: 1px solid rgba(0, 212, 255, 0.35);
+  border-radius: 10px;
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+}
+
+.ovl-info-card[hidden] {
+  display: none;
+}
+
+.ovl-info-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ovl-info-kicker {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.ovl-info-close {
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--ovl-hairline, rgba(255, 255, 255, 0.08));
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ovl-info-title {
+  margin: 4px 0 8px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.ovl-info-fields {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 4px 10px;
+  margin: 0;
+  font-size: 11.5px;
+}
+
+.ovl-info-fields dt {
+  color: var(--text-dim);
+}
+
+.ovl-info-fields dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--text-primary);
+}
+
+.ovl-info-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.ovl-info-links a {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.ovl-info-links a:hover {
+  text-decoration: underline;
+}
+
+.ovl-info-source {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--text-dim);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ovl-group-head::after,
+  .ovl-tab {
+    transition: none;
+  }
+}
+
+.ovl-summary.is-warning {
+  color: #ffd27a;
+}
