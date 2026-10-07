@@ -84,9 +84,9 @@ export function celestrakProxy() {
         res.writeHead(status, {
           'Content-Type': 'text/plain',
           'x-tle-cache': cacheStatus,
-          // When this copy left CelesTrak, so layers can show honest data age.
+          // Epoch ms when this copy left CelesTrak, so layers show honest data age.
           ...(Number.isFinite(fetchedAt)
-            ? { 'x-tle-fetched-at': new Date(fetchedAt).toISOString() }
+            ? { 'x-tle-fetched-at': String(fetchedAt) }
             : {}),
         });
         res.end(body);

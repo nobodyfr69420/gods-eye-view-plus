@@ -365,3 +365,15 @@ test('browser source validates both endpoints', async () => {
   });
   await assert.rejects(source.getSnapshot(), /SWPC HTTP 503/);
 });
+
+test('space providers return nothing from Vite server hooks', async () => {
+  const { crewProxy } = await import('../../../server/providers/space/crew.js');
+  const { reentriesProxy } =
+    await import('../../../server/providers/space/reentries.js');
+  // connect's use() returns the app, a function Vite would run as a post hook.
+  const server = { middlewares: { use: () => () => {} } };
+  for (const plugin of [spaceWeatherProxy(), crewProxy(), reentriesProxy()]) {
+    assert.equal(plugin.configureServer(server), undefined, plugin.name);
+    assert.equal(plugin.configurePreviewServer(server), undefined, plugin.name);
+  }
+});

@@ -144,8 +144,10 @@ export function reentriesProxy({
       return sendJson(res, 500, { error: 'reentries_error' });
     }
   }
-  const install = ({ middlewares }) =>
+  // Returns nothing: Vite runs a function returned here as a post hook.
+  const install = ({ middlewares }) => {
     middlewares.use('/api/space/reentries', handler);
+  };
   return {
     name: 'space-reentries',
     configureServer: install,

@@ -166,8 +166,10 @@ export function spaceWeatherProxy({
     }
   }
 
-  const install = ({ middlewares }) =>
+  // Returns nothing: Vite runs a function returned here as a post hook.
+  const install = ({ middlewares }) => {
     middlewares.use('/api/space-weather', handler);
+  };
   return {
     name: 'space-weather',
     configureServer: install,

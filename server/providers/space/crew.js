@@ -81,8 +81,10 @@ export function crewProxy({
       return sendJson(res, 500, { error: 'crew_error' });
     }
   }
-  const install = ({ middlewares }) =>
+  // Returns nothing: Vite runs a function returned here as a post hook.
+  const install = ({ middlewares }) => {
     middlewares.use('/api/space/crew', handler);
+  };
   return {
     name: 'space-crew',
     configureServer: install,

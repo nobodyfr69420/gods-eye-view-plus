@@ -27,7 +27,7 @@ export function createSatelliteGroupSource({
       const text = response.ok ? await response.text() : '';
       signal?.throwIfAborted();
       const header = (name) => response.headers?.get?.(name) ?? null;
-      const fetchedAt = Date.parse(header('x-tle-fetched-at') || '');
+      const fetchedAt = Number(header('x-tle-fetched-at') ?? NaN);
       return {
         ok: response.ok && /^1 /m.test(text),
         status: response.status,

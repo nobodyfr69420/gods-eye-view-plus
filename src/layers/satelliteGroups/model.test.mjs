@@ -173,7 +173,7 @@ test('group source reads only table groups and reports cache age', async () => {
         text: async () => tle('X', 1),
         headers: new Map([
           ['x-tle-cache', 'STALE-ERROR'],
-          ['x-tle-fetched-at', '2026-10-07T00:00:00.000Z'],
+          ['x-tle-fetched-at', String(Date.parse('2026-10-07T00:00:00.000Z'))],
         ]),
       };
     },
