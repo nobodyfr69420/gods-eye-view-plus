@@ -1,5 +1,11 @@
 import { openSkyProxy } from './aircraft/opensky.js';
-import { celestrakProxy, rocketLaunchesProxy } from './space.js';
+import {
+  celestrakProxy,
+  rocketLaunchesProxy,
+  spaceWeatherProxy,
+  crewProxy,
+  reentriesProxy,
+} from './space.js';
 import { tomtomProxy } from './traffic.js';
 import { firmsProxy } from './firms.js';
 import { terrainHeightsProxy } from './terrain.js';
@@ -58,6 +64,9 @@ function localProviderPlugins({ realtime } = {}) {
     weatherProxy(),
     cycloneProxy(),
     firePerimetersProxy(),
+    spaceWeatherProxy(),
+    crewProxy(),
+    reentriesProxy(),
     keySetupEndpoint(),
   ];
 }

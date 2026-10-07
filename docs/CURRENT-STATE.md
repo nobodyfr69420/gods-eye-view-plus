@@ -608,6 +608,34 @@ Pending mission requests abort on disable/destruction and malformed launch
 snapshots preserve the last accepted display. Catalog groups, propagation cadence,
 tracking intent, replay timing, controls and source attribution remain unchanged.
 
+The **Space & sky** layer-menu group adds five application-only layers (no package
+exports yet), all constructed in `src/app/layers/spaceAndSky.js`:
+
+- `satellite-groups` (`src/layers/satelliteGroups/`): CelesTrak category chips read
+  through the existing `/api/celestrak/<group>` cache (now also returning
+  `x-tle-fetched-at`). Points are SGP4-propagated round-robin (about two seconds per
+  full pass). A click selects one object: ground track (−½/+1 orbit), 0°/10°
+  footprints, a world-overlay card, a context-store record and the next three passes
+  ≥10° over the camera nadir, refreshed each minute or when the camera moves 0.5°.
+  Starlink and debris load only on request. Categories are not yet share-link options.
+- `crewed-stations`: ISS (25544) and Tiangong/CSS (48274) from the CelesTrak
+  `stations` group, always-on tracks and footprints, crew counts from
+  `/api/space/crew` (community rosters, labelled).
+- `reentries`: `/api/space/reentries` serves Space-Track TIP messages only with
+  `SPACETRACK_IDENTITY`/`SPACETRACK_PASSWORD`, otherwise `configured:false`; a keyless
+  decay watch lists sub-200 km-perigee objects from eight CelesTrak groups, labelled
+  ESTIMATED.
+- `aurora-oval`: `/api/space-weather/aurora` OVATION grid drawn as merged 1° cells
+  at 110 km with ≥10/30/50 % threshold chips. An unavailable forecast removes an oval
+  older than two hours rather than presenting it as current.
+- `space-weather`: `/api/space-weather` row readout (Kp, estimated Kp, L1 solar wind,
+  GOES X-ray class, NOAA R/S/G scales, alert list with 24 h/72 h/7 d windows). No
+  globe rendering.
+
+Every selection uses `installSpaceSelection`, which yields to pointer owners and to
+sibling layers' picks. Disable removes listeners, overlay sources and context
+records; destroy also removes every primitive.
+
 The fire layer now exposes `./layers/firms`: an instance factory with separate
 snapshot requests, records, rendering, cards, selection, viewport scheduling and
 terrain-anchor batching. The standalone entry supplies the existing FIRMS source
