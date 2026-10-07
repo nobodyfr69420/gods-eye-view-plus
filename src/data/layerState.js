@@ -555,6 +555,7 @@ export const LAYER_STATE_REGISTRY = Object.freeze([
     token: 'p',
     disposition: 'enabled-only',
   }),
+  Object.freeze({ id: 'aurora-oval', token: '0', disposition: 'enabled-only' }),
   Object.freeze({
     id: 'bhote-koshi-2026',
     token: 'h',
@@ -571,6 +572,11 @@ export const LAYER_STATE_REGISTRY = Object.freeze([
     token: 'c',
     disposition: 'enabled+options',
     optionOwner: 'cctv',
+  }),
+  Object.freeze({
+    id: 'crewed-stations',
+    token: '3',
+    disposition: 'enabled-only',
   }),
   Object.freeze({ id: 'directions', token: 'n', disposition: 'enabled-only' }),
   Object.freeze({ id: 'earthquakes', token: 'e', disposition: 'enabled-only' }),
@@ -620,9 +626,15 @@ export const LAYER_STATE_REGISTRY = Object.freeze([
     disposition: 'enabled+options',
     optionOwner: 'recent-imagery',
   }),
+  Object.freeze({ id: 'reentries', token: '4', disposition: 'enabled-only' }),
   Object.freeze({
     id: 'rocket-launches',
     token: 'x',
+    disposition: 'enabled-only',
+  }),
+  Object.freeze({
+    id: 'satellite-groups',
+    token: '5',
     disposition: 'enabled-only',
   }),
   Object.freeze({
@@ -630,6 +642,11 @@ export const LAYER_STATE_REGISTRY = Object.freeze([
     token: 's',
     disposition: 'enabled+options',
     optionOwner: 'satellites',
+  }),
+  Object.freeze({
+    id: 'space-weather',
+    token: '6',
+    disposition: 'enabled-only',
   }),
   Object.freeze({
     id: 'telegeography-submarine-cables',

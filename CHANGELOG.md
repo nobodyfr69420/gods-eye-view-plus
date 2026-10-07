@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+- Add a **Space & sky** layer group. **Satellite Groups** draws every public
+  CelesTrak category (Starlink, OneWeb, Kuiper, Qianfan/Guowang, GNSS, weather,
+  Earth observation, science, amateur, public-catalog military, comms, GEO,
+  CubeSats, last-30-days launches) plus four debris fields as filterable chips;
+  selecting an object draws its ground track, 0°/10° coverage footprints and
+  the next three passes over the camera. **Crewed Stations** follows the ISS and
+  Tiangong with crew counts from community rosters. **Re-entries** lists
+  official Space-Track TIP predictions when `SPACETRACK_IDENTITY` /
+  `SPACETRACK_PASSWORD` are set, and otherwise a keyless, explicitly estimated
+  decay watch of sub-200 km objects. **Aurora Oval** draws NOAA SWPC's OVATION
+  forecast at ~110 km, and **Space Weather** shows Kp, solar wind, GOES X-ray
+  flare class, NOAA scales and recent alerts. All sources are cached server-side.
+
 - Add Norway's road cameras from Statens vegvesen as a CCTV pack. The camera
   list is one keyless GeoJSON request to the agency's OGC API view of its
   DATEX 3.1 CCTV table, so no DATEX account is needed. Every working camera
