@@ -17,8 +17,8 @@ import { hasProxySignals } from './localRequestGate.mjs';
 /** Longest accepted key/token value. Real provider keys are all far shorter. */
 export const KEY_SETUP_VALUE_LIMIT = 512;
 
-/** Most env vars accepted in one save. The registry defines ten. */
-export const KEY_SETUP_UPDATE_LIMIT = 16;
+/** Most env vars accepted in one save. The registry defines seventeen. */
+export const KEY_SETUP_UPDATE_LIMIT = 24;
 
 /** Header line written above keys the panel appends to a .env file. */
 export const KEY_SETUP_APPEND_HEADER =
@@ -107,6 +107,54 @@ export const KEY_SETUP_KEYS = Object.freeze([
     unlocks: 'Higher space-missions request allowance',
     getUrl: 'https://thespacedevs.com',
     envVars: Object.freeze(['LL2_API_TOKEN']),
+    tier: 'free',
+  }),
+  Object.freeze({
+    id: 'openweathermap',
+    title: 'OPENWEATHERMAP',
+    unlocks: 'Weather map overlays: clouds, rain, pressure, wind, temperature',
+    getUrl: 'https://home.openweathermap.org/api_keys',
+    envVars: Object.freeze(['OWM_API_KEY']),
+    tier: 'free',
+  }),
+  Object.freeze({
+    id: 'waqi',
+    title: 'WAQI AIR QUALITY',
+    unlocks: 'Live air-quality index overlay, worldwide',
+    getUrl: 'https://aqicn.org/data-platform/token/',
+    envVars: Object.freeze(['WAQI_TOKEN']),
+    tier: 'free',
+  }),
+  Object.freeze({
+    id: 'openaip',
+    title: 'OPENAIP',
+    unlocks: 'Airspace, airports and navaids chart overlay',
+    getUrl: 'https://www.openaip.net/users/clients',
+    envVars: Object.freeze(['OPENAIP_API_KEY']),
+    tier: 'free',
+  }),
+  Object.freeze({
+    id: 'thunderforest',
+    title: 'THUNDERFOREST',
+    unlocks: 'Transport, cycle and outdoors map overlays',
+    getUrl: 'https://manage.thunderforest.com/dashboard',
+    envVars: Object.freeze(['THUNDERFOREST_API_KEY']),
+    tier: 'free',
+  }),
+  Object.freeze({
+    id: 'windy-webcams',
+    title: 'WINDY WEBCAMS',
+    unlocks: 'Public webcams around the camera',
+    getUrl: 'https://api.windy.com/keys',
+    envVars: Object.freeze(['WINDY_WEBCAMS_API_KEY']),
+    tier: 'free',
+  }),
+  Object.freeze({
+    id: 'spacetrack',
+    title: 'SPACE-TRACK',
+    unlocks: 'Official re-entry predictions (Space & sky)',
+    getUrl: 'https://www.space-track.org/auth/createAccount',
+    envVars: Object.freeze(['SPACETRACK_IDENTITY', 'SPACETRACK_PASSWORD']),
     tier: 'free',
   }),
 ]);
