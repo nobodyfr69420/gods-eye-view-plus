@@ -397,6 +397,43 @@ The OVERLAYS panel (`src/overlayLibrary/`, catalog in [docs/OVERLAYS.md](docs/OV
 
 Sun, moon, terminator, twilight, grids, range rings and the horizon are computed in the browser and use no external data.
 
+### Overlay Library, second wave
+
+Live feeds again go through `/api/overlay-feed/<id>` (allowlist in `server/providers/overlayFeeds/feedsPlus.js` and `worldBank.js`). Rasters that need a key, a resolved path or a CORS relay go through `/api/overlay-tile/<id>/{z}/{x}/{y}` (`server/providers/overlayTiles.js`): fixed upstream hosts, keys read server-side only, tiles cached in memory.
+
+| Source | Used for | License / terms | Attribution |
+| --- | --- | --- | --- |
+| **NASA GIBS** (more layers) | Flood detection, GOES/Himawari fire-temperature, dust, air-mass and visible bands, pyroCb smoke, TEMPO NO₂/HCHO, AIRS CO₂/CH₄/CO/air temperature, OSCAR currents, SMAP salinity, AMSR2 sea ice and wind, CYGNSS wind, GEDI canopy height, lightning climatology, Day/Night Band | NASA open data; product citations apply | NASA EOSDIS GIBS |
+| **NASA SEDAC** (via GIBS) | Natural Disaster Hotspots (hazard, mortality, economic-loss risk), GRUMP settlements and urban extents, built-up areas, human footprint, anthromes, croplands/pastures, mangroves, urban expansion, low-elevation coastal zones, urban heat islands, GRanD dams and reservoirs | CC BY 4.0 (most); dataset citations apply | CIESIN, Columbia University / NASA SEDAC and the named producers |
+| **Iowa Environmental Mesonet** | US NEXRAD radar composite | Free public service | Iowa State University IEM |
+| **RainViewer** | Global radar mosaic (latest frame, zoom ≤ 7) | RainViewer public API terms (attribution) | RainViewer |
+| **Global Forest Watch** (UMD/Hansen, GLAD, RADD) | Tree-cover loss, integrated deforestation alerts | CC BY 4.0 | Global Forest Watch; Hansen/UMD/Google/USGS/NASA |
+| **GBIF** | Occurrence-density maps by taxon | Map tiles CC BY 4.0; underlying records per dataset | GBIF.org |
+| **iNaturalist** | Research-grade observations with photos (open geoprivacy only) | Observations mostly CC BY-NC; photos per their license | iNaturalist contributors |
+| **EMSC** (seismicportal.eu) | Global real-time earthquakes | Free with attribution | EMSC-CSEM |
+| **GeoNet** | New Zealand felt earthquakes | CC BY 4.0 | GeoNet / GNS Science |
+| **USGS** | All earthquakes, past day and past hour | US public domain | U.S. Geological Survey |
+| **NOAA SPC** | Storm reports (tornado, wind, hail), today and yesterday | US public domain | NOAA Storm Prediction Center |
+| **NASA/JPL CNEOS** | Fireball (bolide) events | US public domain | NASA/JPL Center for Near Earth Object Studies |
+| **IODA** (Georgia Tech) | Country internet-outage events, last 24 h | IODA terms (research use, attribution) | Internet Outage Detection and Analysis |
+| **Amtraker** | Live Amtrak train positions | Community API over Amtrak public status | Amtraker (piemadd) |
+| **Fintraffic Digitraffic** | Baltic/Finnish AIS ship positions and metadata | CC BY 4.0 | Fintraffic / Digitraffic |
+| **PeeringDB** | Interconnection facilities (data centres) | PeeringDB acceptable use; open data | PeeringDB |
+| **CityBikes** | Bike-share networks worldwide | CityBikes API terms (AGPL project, attribution) | CityBikes |
+| **OpenWeatherMap** 🔑 | Weather map tiles | OWM terms (free tier) | OpenWeatherMap |
+| **World Air Quality Index** 🔑 | AQI tiles | WAQI terms (non-commercial, attribution) | World Air Quality Index Project |
+| **OpenAIP** 🔑 | Aeronautical chart tiles | CC BY-NC 4.0 | openAIP.net |
+| **Thunderforest** 🔑 | Transport, cycle, outdoors, landscape maps | Thunderforest terms (free hobby tier) | Maps © Thunderforest, data © OpenStreetMap contributors |
+| **Windy Webcams** 🔑 | Public webcams near the view | Windy Webcams API terms | Windy.com |
+
+### World Statistics
+
+The WORLD tab and the *World Statistics* overlays (74 country choropleths) read the **World Bank World Development Indicators** API (CC BY 4.0, "World Bank, World Development Indicators") — the most recent value each country reports (`mrnev=1`), cached for a day on disk — joined to **Natural Earth** country shapes (public domain). Country fact sheets add World Bank country metadata and a **Wikipedia** page summary (CC BY-SA 4.0). The world clock's population, births and deaths are estimates computed from WDI's world population, growth rate and crude birth/death rates, and are labelled as such.
+
+### ME (your own location)
+
+ME data comes from you: this browser's Geolocation API, your own phone's tracking app (OwnTracks, Overland, GPSLogger, Traccar Client) and files you import. It is stored only in `.gev-cache/me/` on this machine. **IP LOCATE** asks **ipwho.is** (free, keyless) for this machine's approximate position. See [docs/ME.md](docs/ME.md).
+
 ## In-app attribution
 
 The required Google Maps / Cesium credit renders on the on-globe credit line (`#cesium-credits`, bottom-left) and must stay visible — including in clean-view and recording modes (the whole line, logo + "Google Maps" + the "Data attribution" link, stays on screen; only the GEV panels/HUD fade). The layer-specific credits (adsb.lol, adsbdb, TeleGeography, OSM datacenters/dams/roads, NASA FIRMS, CelesTrak, USGS, City of Austin, Fintraffic, GBFS, Radio Browser, OpenSky, AISStream) are registered into the expandable **"Data attribution"** popover on that credit line via `viewer.creditDisplay.addStaticCredit(new Cesium.Credit(html, /* showOnScreen */ false))` — see `src/data/dataCredits.js`. When you add a new data source, add its license and attribution to this file **and** append an entry to `DATA_CREDITS` in `src/data/dataCredits.js` so it surfaces in the app.

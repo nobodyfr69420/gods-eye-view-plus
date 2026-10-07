@@ -2,6 +2,38 @@
 
 ## [Unreleased]
 
+- **Maxed-out Overlay Library: 472 overlays in 22 categories.** Adds 186 overlays:
+  62 more NASA GIBS layers (flood detection, GOES/Himawari fire-temperature,
+  dust, air-mass and 1 km visible bands, TEMPO NO₂, AIRS CO₂/methane, OSCAR
+  currents, SMAP salinity, GEDI canopy height, SEDAC disaster-risk, settlement
+  and urban-heat layers), US NEXRAD and global RainViewer radar, Global Forest
+  Watch loss and alerts, GBIF biodiversity density, and live Amtrak trains,
+  Baltic AIS ships, EMSC/GeoNet/USGS quakes, SPC storm reports, CNEOS fireballs,
+  IODA internet outages, PeeringDB data centres, CityBikes networks and
+  iNaturalist sightings. Keyed rasters (OpenWeatherMap, WAQI, OpenAIP,
+  Thunderforest) and Windy webcams go through a new `/api/overlay-tile` relay
+  that keeps keys server-side; without a key the overlay names it. Info cards
+  can show photos.
+
+- **WORLD tab — World Statistics.** 74 World Bank indicators as country
+  choropleths (equal-count sixths, real class breaks, top/bottom 10), a world
+  population / births / deaths clock (labelled estimates), the world at a
+  glance, and a country fact sheet with Wikipedia summary and every indicator
+  against the world (`/api/world-stats`). `Shift+W`.
+
+- **ME tab — track yourself.** Live browser geolocation with follow-me, phone
+  ingest for OwnTracks, Overland, GPSLogger and Traccar Client (token-protected
+  `/api/me/*`), IP estimate, import from Google Timeline (all three export
+  formats), GPX, KML, GeoJSON, CSV and photo EXIF, five on-device overlays
+  (position, accuracy, trail, places, photos), stats, export (GPX/GeoJSON/CSV)
+  and forget. Stored only in `.gev-cache/me/`. `Shift+M`. See docs/ME.md.
+
+- **`npm run keys`.** Imports keys from other installs on the machine,
+  generates `ME_INGEST_TOKEN`, live-checks every key with its own provider, and
+  `--setup` captures each new key from the clipboard as you copy it. Provider
+  Settings gains OpenWeatherMap, WAQI, OpenAIP, Thunderforest, Windy Webcams and
+  Space-Track.
+
 - Add a **Space & sky** layer group. **Satellite Groups** draws every public
   CelesTrak category (Starlink, OneWeb, Kuiper, Qianfan/Guowang, GNSS, weather,
   Earth observation, science, amateur, public-catalog military, comms, GEO,

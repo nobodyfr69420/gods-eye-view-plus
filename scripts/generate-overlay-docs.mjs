@@ -10,6 +10,7 @@ const KIND = {
   feed: 'Data feed',
   osm: 'OSM (zoomed in)',
   computed: 'Computed',
+  local: 'On this device',
 };
 const escape = (text) => String(text).replace(/\|/g, '\\|');
 
@@ -24,8 +25,11 @@ const lines = [
   '',
   `**${OVERLAY_DEFINITIONS.length} overlays** in ${OVERLAY_CATEGORIES.length} categories: ` +
     `${byKind.feed || 0} data feeds, ${byKind.imagery || 0} imagery layers, ` +
-    `${byKind.osm || 0} OpenStreetMap layers and ${byKind.computed || 0} computed layers. ` +
-    'Every one is keyless.',
+    `${byKind.osm || 0} OpenStreetMap layers, ${byKind.computed || 0} computed layers and ` +
+    `${byKind.local || 0} on-device ME layers. ` +
+    `${OVERLAY_DEFINITIONS.filter((d) => !d.requiresKey).length} are keyless; ` +
+    `${OVERLAY_DEFINITIONS.filter((d) => d.requiresKey).length} unlock with a free key (marked 🔑; add keys with ` +
+    '`npm run keys -- --setup`).',
   '',
   'Open the **OVERLAYS** panel on the left rail (or press **L**; **Shift+L** opens the **STATS** tab). ' +
     'Search, filter by type, open a row for its description, source, legend and opacity, and click any ' +
@@ -40,6 +44,8 @@ const lines = [
   '- **Imagery** overlays drape raster tiles on the globe; on Google Photorealistic 3D they drape on the ' +
     'photoreal tileset.',
   '- **Computed** overlays are calculated in the browser (sun, moon, terminator, grids, range rings).',
+  '- **Keyed imagery** (🔑) is relayed by `/api/overlay-tile/<id>/{z}/{x}/{y}`, so the key never reaches the browser; without its key the overlay says which key it needs.',
+  '- **On this device** overlays are your own location data from the ME tab — see [docs/ME.md](ME.md).',
   '',
 ];
 for (const category of OVERLAY_CATEGORIES) {
@@ -56,8 +62,9 @@ for (const category of OVERLAY_CATEGORIES) {
       (def.refreshMs
         ? ` · every ${Math.round(def.refreshMs / 60000)} min`
         : '');
+    const key = def.requiresKey ? ` 🔑 \`${def.requiresKey}\`` : '';
     lines.push(
-      `| **${escape(def.name)}** | ${escape(def.description)} | ${escape(def.source)} | ${kind} |`,
+      `| **${escape(def.name)}**${key} | ${escape(def.description)} | ${escape(def.source)} | ${kind} |`,
     );
   }
   lines.push('');
@@ -73,6 +80,19 @@ lines.push(
   '- the library by category, and a **breakdown** of any active overlay (top groups and min/median/mean/max/total of its key value — e.g. nuclear capacity by country);',
   '- sun and moon position, moon phase, and the NOAA planetary K-index for the last 7 days;',
   '- camera, scene and network diagnostics, with **Export stats (JSON)**.',
+  '',
+  '## WORLD tab',
+  '',
+  'World Statistics (**Shift+W**), from the World Bank World Development Indicators (CC BY 4.0):',
+  '',
+  '- **World clock** — population now, births and deaths today: estimates grown from the World Bank mid-year population and crude birth/death rates (the method is printed under the tiles);',
+  '- **The world at a glance** — GDP, GDP per capita, life expectancy, urbanisation, internet, electricity, CO₂, forest, fertility, poverty, military spending, literacy;',
+  '- **Map an indicator** — pick any of the 74 indicators in the World Statistics category and SHADE MAP: countries are shaded in sixths (equal-count classes, so every indicator reads well), with the real class breaks, the 10 highest and lowest countries and each country’s data year;',
+  '- **Country fact sheet** — click a shaded country (or pick one): capital, region, income group, a Wikipedia summary, FLY TO CAPITAL, and all 74 indicators with a ▲/▼ ratio to the world.',
+  '',
+  '## ME tab',
+  '',
+  'Track yourself (**Shift+M**): live browser GPS/Wi-Fi tracking, your phone’s tracking app, an IP estimate, imported history (Google Timeline, GPX, KML, GeoJSON, CSV, photo EXIF), stats, places, export and a forget button. Everything stays on this machine. Details: [docs/ME.md](ME.md).',
   '',
 );
 const target = fileURLToPath(new URL('../docs/OVERLAYS.md', import.meta.url));

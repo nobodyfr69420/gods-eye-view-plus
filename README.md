@@ -75,7 +75,10 @@ Start with the included data sources, then add your own. Each layer is a separat
 - **🧭 Tilt and North Up:** Switch between straight-down and a 35° oblique, or put north at the top, while a tracked target stays centered.
 - **🔍 Keyless search:** Type coordinates or a bundled city or landmark to fly there with no network request; other names use Google when configured, then Photon and Nominatim.
 - **📦 Shareable scenes:** Import, preview and share Director scenes as files or bundles, with camera anchors, authored moves and data packs.
-- **🗂️ Overlay Library — 286 overlays + STATS:** A searchable OVERLAYS panel with 286 keyless overlays in 18 categories (hazards, weather, air quality, oceans, terrain, night lights, power plants, airports and navaids, rail and trails, hospitals to embassies, borders, time zones, grids, sun, moon and aurora), click-for-details cards, and a STATS tab with live app-wide numbers, trends and breakdowns. Press `L`. → [docs/OVERLAYS.md](docs/OVERLAYS.md)
+- **🗂️ Overlay Library — 472 overlays + STATS:** A searchable OVERLAYS panel with 472 overlays in 22 categories (hazards and disaster risk, weather and radar, air quality, oceans, terrain and forests, night lights, power plants, airports and navaids, live trains and ships, rail and trails, hospitals to embassies, wildlife, data centres and internet outages, borders, time zones, grids, sun, moon and aurora). 459 are keyless; 13 unlock with a free key. Click-for-details cards, and a STATS tab with live app-wide numbers, trends and breakdowns. Press `L`. → [docs/OVERLAYS.md](docs/OVERLAYS.md)
+- **🌐 World Statistics (WORLD tab):** a live world population / births / deaths clock, the world at a glance, any of 74 World Bank indicators as a country choropleth with real class breaks and top/bottom rankings, and a fact sheet for every country. Press `Shift+W`.
+- **📍 ME — track yourself (ME tab):** live GPS/Wi-Fi tracking in the browser, your phone 24/7 via OwnTracks/Overland/GPSLogger/Traccar, an IP estimate, and your history from Google Timeline, GPX/KML/GeoJSON/CSV and photo EXIF — with trails, places, stats, export and forget. Stored only on your machine. Press `Shift+M`. → [docs/ME.md](docs/ME.md)
+- **🔑 `npm run keys`:** imports keys from your other installs, generates local secrets, live-checks every key with its provider, and `--setup` saves each new key the moment you copy it from the provider's page.
 - **🌊 Nepal flood scene:** Replay the Bhote Koshi flood: flood path, witness sources and before-and-after imagery (bundled data is non-commercial; see [DATA_SOURCES.md](DATA_SOURCES.md)).
 
 ---
@@ -328,12 +331,16 @@ _The Space Missions layer replaying a Falcon 9 ascent — labeled `RECONSTRUCTED
 
 ![Diving into the Bahamas and revealing labeled submarine cable routes beneath the globe](docs/media/09-undersea-cables.gif)
 
-### 🗂️ The Overlay Library — 286 more, all keyless
+### 🗂️ The Overlay Library — 472 more
 
-The **OVERLAYS** panel (left rail, or press **`L`**) adds **286 overlays** on top of the layers above — **108 live and reference data feeds, 67 imagery layers, 93 OpenStreetMap layers and 18 computed layers**, in 18 categories. Search them, filter by type (Live · Imagery · Data · OSM · Computed · ★ favorites), open a row for its description, source, legend and opacity slider, and click anything they draw for a details card.
+The **OVERLAYS** panel (left rail, or press **`L`**) adds **472 overlays** on top of the layers above — **195 live and reference data feeds, 161 imagery layers, 93 OpenStreetMap layers, 18 computed layers and 5 on-device ME layers**, in 22 categories. 459 need no key; 13 (OpenWeatherMap, WAQI, OpenAIP, Thunderforest, Windy webcams) unlock with a free key and say so until you add it. Search them, filter by type (Live · Imagery · Data · OSM · Computed · ★ favorites), open a row for its description, source, legend and opacity slider, and click anything they draw for a details card.
 
 | Category | A taste of what's inside |
 | --- | --- |
+| ◎ Me & My Devices | Your live position and accuracy circle, your trail, the places you spend time, your photo locations (see the ME tab) |
+| ◍ World Statistics | 74 World Bank indicators as country choropleths: population, GDP, inflation, inequality, internet, electricity, CO₂, life expectancy, literacy, military spending, homicide… |
+| ✿ Wildlife & Biodiversity | GBIF occurrence density (all life, birds, mammals, plants, insects, fungi, reptiles, amphibians, sharks, cephalopods, butterflies), live iNaturalist sightings with photos |
+| ⌬ Internet & Telecom | ~5,900 data centres and colocation facilities (PeeringDB), live country internet outages (IODA) |
 | △ Hazards & Disasters | NASA EONET events (13 categories), GDACS alerts (6), USGS significant / M4.5+ / M2.5+ quakes, US volcano alert levels, 1,300 Holocene volcanoes, historical tsunamis and eruptions, river gauges in flood, tectonic plates |
 | ☁ Weather & Storms | NWS warnings by type (11), SPC severe outlooks (6), SIGMETs, METAR flight categories, PIREPs, ocean buoys, GOES/Himawari imagery, IMERG precipitation |
 | ◌ Air Quality & Atmosphere | PM2.5 / PM10 citizen sensors, NO₂, CO, SO₂, ozone, aerosols, dust |
@@ -423,7 +430,14 @@ See [`docs/CURRENT-STATE.md`](docs/CURRENT-STATE.md) for the authoritative runti
 
 🟢 **No key** · 🟡 **Free key** · 🔴 **Metered**
 
-Use **POWER UP → Provider Settings** to add keys. The tables below explain what
+Use **POWER UP → Provider Settings** to add keys, or let the terminal do it:
+
+```bash
+npm run keys            # import keys from your other installs, generate local secrets, live-check every key
+npm run keys -- --setup # open each missing provider's key page; the key is saved the moment you copy it
+```
+
+The tables below explain what
 each provider enables; none is required to start. See the
 [setup instructions](#then-power-it-up--in-the-app-not-in-a-file) for storage
 and configuration details.
