@@ -139,6 +139,7 @@ export function createOverlayLibrary({
   definitions = OVERLAY_DEFINITIONS,
   storage = safeStorage(),
   fetchImpl,
+  localSources = new Map(),
 } = {}) {
   if (!viewer?.scene) throw new TypeError('A Cesium viewer is required');
   const scene = viewer.scene;
@@ -575,8 +576,41 @@ export function createOverlayLibrary({
     return c;
   }
 
+  /**
+   * Local overlays draw features an in-browser source produces (the ME
+   * layers): `{load({view}) → {features}, subscribe(fn) → unsubscribe}`.
+   * A source registered after its overlay was restored reloads it.
+   */
+  function localController(def) {
+    let unsubscribe = null;
+    const c = vectorController(def, async ({ signal }) => {
+      const source = localSources.get(def.local);
+      if (!source) return { features: [], message: 'Waiting for its source…' };
+      unsubscribe ??= source.subscribe?.(() => c.load('refresh')) ?? null;
+      return source.load({ signal, view });
+    });
+    const destroyBase = c.destroy;
+    c.destroy = () => {
+      unsubscribe?.();
+      unsubscribe = null;
+      destroyBase();
+    };
+    return c;
+  }
+
+  function registerLocalSource(id, source) {
+    localSources.set(id, source);
+    for (const c of active.values())
+      if (c.def.kind === 'local' && c.def.local === id) c.load('initial');
+    return () => {
+      if (localSources.get(id) === source) localSources.delete(id);
+    };
+  }
+
   function createController(def) {
     switch (def.kind) {
+      case 'local':
+        return localController(def);
       case 'imagery':
         return imageryController(def);
       case 'feed':
@@ -718,15 +752,40 @@ export function createOverlayLibrary({
       }
     }
     log('enable', id);
-    try {
-      c.start();
-    } catch (error) {
-      c.set('error', {
-        message: String(error?.message || error).slice(0, 140),
+    const start = () => {
+      try {
+        c.start();
+      } catch (error) {
+        c.set('error', {
+          message: String(error?.message || error).slice(0, 140),
+        });
+      }
+    };
+    if (def.requiresKey) {
+      // Keyed overlays ask the server which keys exist before drawing, so a
+      // missing key reads as a next step rather than a wall of broken tiles.
+      c.set('loading', { message: '' });
+      keyAvailability().then((keys) => {
+        if (destroyed || active.get(id) !== c) return;
+        if (keys[def.requiresKey] === false)
+          c.set('error', {
+            message: `Needs ${def.requiresKey} — run: npm run keys -- --setup`,
+          });
+        else start();
       });
-    }
+    } else start();
     persist();
     notify();
+  }
+
+  let keyStatus = null;
+  /** {ENV_VAR: boolean} from the tile relay; {} when it cannot be asked. */
+  function keyAvailability() {
+    keyStatus ??= (fetchImpl ?? globalThis.fetch)('/api/overlay-tile/status')
+      .then((response) => (response.ok ? response.json() : null))
+      .then((body) => body?.keys ?? {})
+      .catch(() => ({}));
+    return keyStatus;
   }
 
   function disable(id) {
@@ -853,6 +912,7 @@ export function createOverlayLibrary({
     disable,
     toggle: (id) => (active.has(id) ? disable(id) : enable(id)),
     isEnabled: (id) => active.has(id),
+    registerLocalSource,
     setAlpha,
     reload,
     clearAll,

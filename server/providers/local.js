@@ -32,6 +32,9 @@ import { firePerimetersProxy } from './firePerimeters.js';
 import { cycloneProxy } from './cyclones.js';
 import { windProxy } from './wind.js';
 import { overlayFeedsProxy } from './overlayFeeds.js';
+import { overlayTilesProxy } from './overlayTiles.js';
+import { worldStatsProxy } from './worldStats.js';
+import { meProxy } from './me.js';
 
 /**
  * Construct the local provider plugins in their established order.
@@ -69,6 +72,9 @@ function localProviderPlugins({ realtime } = {}) {
     crewProxy(),
     reentriesProxy(),
     overlayFeedsProxy(),
+    overlayTilesProxy(),
+    worldStatsProxy(),
+    meProxy(),
     keySetupEndpoint(),
   ];
 }

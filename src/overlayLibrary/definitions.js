@@ -15,6 +15,8 @@
  * link|mw|m|ft|km|pct.
  */
 
+import { addPlusDefinitions } from './definitionsPlus.js';
+
 const MIN = 60_000;
 const HOUR = 60 * MIN;
 const GIBS_WMS = 'https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi';
@@ -22,6 +24,7 @@ const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
 
 const defs = [];
 const add = (def) => defs.push(def);
+add.last = () => defs[defs.length - 1];
 
 // ── Builders ──────────────────────────────────────────────────────────────
 
@@ -3520,6 +3523,10 @@ feed(
     },
   },
 );
+
+// Second wave: more NASA layers, radar, biodiversity, keyed tiles, live
+// feeds and World Bank statistics (./definitionsPlus.js).
+addPlusDefinitions({ add, gibs, tiles, feed, quakeStyle, quakeInfo });
 
 /** The frozen overlay catalog. */
 export const OVERLAY_DEFINITIONS = Object.freeze(

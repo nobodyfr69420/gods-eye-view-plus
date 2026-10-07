@@ -6,8 +6,9 @@ import {
   getOverlayFeed,
   overlayFeedIds,
 } from '../../server/providers/overlayFeeds/feeds.js';
+import { OVERLAY_TILE_SOURCES } from '../../server/providers/overlayTiles.js';
 
-const KINDS = new Set(['imagery', 'feed', 'osm', 'computed']);
+const KINDS = new Set(['imagery', 'feed', 'osm', 'computed', 'local']);
 const COMPUTED = new Set([
   'graticule',
   'graticule-local',
@@ -90,10 +91,19 @@ test('every server feed is used by an overlay or the stats tab', () => {
     assert.ok(used.has(id), `unused feed ${id}`);
 });
 
-test('imagery overlays use https tile templates or WMS layers', () => {
+test('imagery overlays use https tile templates, WMS layers or the local relay', () => {
   for (const def of OVERLAY_DEFINITIONS.filter((d) => d.kind === 'imagery')) {
     const spec = def.imagery;
-    assert.match(spec.url, /^https:\/\//, def.id);
+    assert.match(
+      spec.url,
+      /^(https:\/\/|\/api\/overlay-tile\/[a-z0-9-]+\/)/,
+      def.id,
+    );
+    if (spec.url.startsWith('/api/overlay-tile/'))
+      assert.ok(
+        OVERLAY_TILE_SOURCES[spec.url.split('/')[3]],
+        `${def.id} relays an allowlisted tile source`,
+      );
     if (spec.provider === 'wms') assert.ok(spec.layers, `${def.id} WMS layer`);
     else
       assert.match(spec.url, /\{z\}.*\{[xy]\}.*\{[xy]\}/, `${def.id} template`);
@@ -133,5 +143,25 @@ test('style colors and legends are valid hex', () => {
       assert.match(color, hex, `${def.id} stops`);
     for (const color of Object.values(def.style?.colorBy?.map || {}))
       assert.match(color, hex, `${def.id} map`);
+  }
+});
+
+test('keyed overlays name a key the registry and the relay both know', async () => {
+  const { knownKeySetupEnvVars } = await import('../keySetupCore.mjs');
+  const known = knownKeySetupEnvVars();
+  for (const def of OVERLAY_DEFINITIONS.filter((d) => d.requiresKey))
+    assert.ok(known.has(def.requiresKey), `${def.id} → ${def.requiresKey}`);
+  for (const source of Object.values(OVERLAY_TILE_SOURCES))
+    if (source.env) assert.ok(known.has(source.env), source.env);
+});
+
+test('the World Statistics category has one choropleth per indicator', async () => {
+  const { WORLD_INDICATORS, worldFeedId } =
+    await import('./worldIndicators.js');
+  for (const indicator of WORLD_INDICATORS) {
+    const def = OVERLAY_BY_ID.get(worldFeedId(indicator));
+    assert.ok(def, indicator.code);
+    assert.equal(def.category, 'world');
+    assert.equal(def.style.colorBy.stops.length, 6);
   }
 });

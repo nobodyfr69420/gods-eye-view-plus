@@ -1,6 +1,7 @@
 /** Overlay Library categories, in panel order. Glyphs are plain Unicode so the
  * subset icon font (index.html `icon_names`) never needs to grow. */
 export const OVERLAY_CATEGORIES = Object.freeze([
+  { id: 'me', name: 'Me & My Devices', glyph: '◎', accent: '#00ff9c' },
   { id: 'hazards', name: 'Hazards & Disasters', glyph: '△', accent: '#ff6b3d' },
   { id: 'weather', name: 'Weather & Storms', glyph: '☁', accent: '#5fb4ff' },
   {
@@ -56,6 +57,14 @@ export const OVERLAY_CATEGORIES = Object.freeze([
     accent: '#ffd36e',
   },
   { id: 'places', name: 'Cities & Population', glyph: '◉', accent: '#00d4ff' },
+  { id: 'world', name: 'World Statistics', glyph: '◍', accent: '#4fbde6' },
+  {
+    id: 'life',
+    name: 'Wildlife & Biodiversity',
+    glyph: '✿',
+    accent: '#9be15d',
+  },
+  { id: 'network', name: 'Internet & Telecom', glyph: '⌬', accent: '#a0f0ff' },
   { id: 'borders', name: 'Borders & Reference', glyph: '⌗', accent: '#e8eaed' },
   { id: 'grids', name: 'Grids & Measurement', glyph: '⊞', accent: '#7fe0ff' },
   { id: 'sky', name: 'Sun, Moon & Space', glyph: '☼', accent: '#ffe082' },

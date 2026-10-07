@@ -57,6 +57,19 @@ export function createInfoCard({ host = document.body } = {}) {
     list.className = 'ovl-info-fields';
     const links = [];
     for (const [label, key, format] of def.info?.fields || []) {
+      if (format === 'image') {
+        const src = String(props[key] || '');
+        if (!/^https:\/\//i.test(src)) continue;
+        const img = document.createElement('img');
+        img.className = 'ovl-info-image';
+        img.alt = label;
+        img.loading = 'lazy';
+        img.referrerPolicy = 'no-referrer';
+        img.src = src;
+        img.addEventListener('error', () => img.remove(), { once: true });
+        card.appendChild(img);
+        continue;
+      }
       const value = formatValue(props[key], format);
       if (value === null) continue;
       if (format === 'link') {

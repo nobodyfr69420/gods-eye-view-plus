@@ -27,6 +27,8 @@ import {
   usgsVolcanoFeatures,
   wikipediaFeatures,
 } from './parsers.js';
+import { PLUS_FEEDS } from './feedsPlus.js';
+import { WORLD_BANK_FEEDS } from './worldBank.js';
 
 const MIN = 60_000;
 const HOUR = 60 * MIN;
@@ -160,6 +162,8 @@ const usgsQuakes = (file) => ({
 feed('usgs-significant-month', usgsQuakes('significant_month'));
 feed('usgs-m45-week', usgsQuakes('4.5_week'));
 feed('usgs-m25-week', usgsQuakes('2.5_week'));
+feed('usgs-all-day', usgsQuakes('all_day'));
+feed('usgs-all-hour', usgsQuakes('all_hour'));
 feed('usgs-volcano-alerts', {
   attribution: 'USGS Volcano Hazards Program',
   upstreams: () => [
@@ -689,6 +693,9 @@ feed('ne-countries', {
   transform: ([body]) => countryIndicatorFeatures(body),
   staleMs: 365 * DAY,
 });
+
+// ── Second wave (./feedsPlus.js) and World Bank indicators (./worldBank.js)
+for (const [id, spec] of [...PLUS_FEEDS, ...WORLD_BANK_FEEDS]) feed(id, spec);
 
 /** Look up a feed by id (null when not allowlisted). */
 export function getOverlayFeed(id) {

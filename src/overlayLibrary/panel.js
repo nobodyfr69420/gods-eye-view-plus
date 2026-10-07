@@ -13,6 +13,7 @@ const KIND_LABEL = {
   feed: 'Live / data feed',
   osm: 'OpenStreetMap (zoomed in)',
   computed: 'Computed',
+  local: 'On this device',
 };
 const KIND_FILTERS = [
   ['all', 'All'],
@@ -22,6 +23,14 @@ const KIND_FILTERS = [
   ['osm', 'OSM'],
   ['computed', 'Computed'],
   ['favorites', '★'],
+];
+/** Panel tabs: the catalog, what is on, live numbers, World Statistics, ME. */
+const TABS = [
+  ['library', 'LIBRARY'],
+  ['active', 'ACTIVE'],
+  ['stats', 'STATS'],
+  ['world', 'WORLD'],
+  ['me', 'ME'],
 ];
 const STATUS_TEXT = {
   off: 'OFF',
@@ -70,11 +79,7 @@ export function createOverlayPanel({ root, library, onTabChange }) {
   tabs.setAttribute('role', 'tablist');
   const tabButtons = {};
   const panels = {};
-  for (const [id, label] of [
-    ['library', 'LIBRARY'],
-    ['active', 'ACTIVE'],
-    ['stats', 'STATS'],
-  ]) {
+  for (const [id, label] of TABS) {
     const button = el('button', 'ovl-tab');
     button.type = 'button';
     button.setAttribute('role', 'tab');
@@ -99,9 +104,13 @@ export function createOverlayPanel({ root, library, onTabChange }) {
   });
   on(tabs, 'keydown', (event) => {
     if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
-    const order = ['library', 'active', 'stats'];
+    const order = TABS.map(([id]) => id);
     const next =
-      order[(order.indexOf(tab) + (event.key === 'ArrowRight' ? 1 : 2)) % 3];
+      order[
+        (order.indexOf(tab) +
+          (event.key === 'ArrowRight' ? 1 : order.length - 1)) %
+          order.length
+      ];
     setTab(next);
     tabButtons[next].button.focus();
     event.preventDefault();
@@ -505,6 +514,7 @@ export function createOverlayPanel({ root, library, onTabChange }) {
     get statsContainer() {
       return panels.stats;
     },
+    panelFor: (id) => panels[id] ?? null,
     setTab,
     get tab() {
       return tab;
