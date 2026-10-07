@@ -896,5 +896,12 @@
   "src/tools/views.test.mjs",
   "src/app/embed.test.mjs",
   "src/tools/globePanel.test.mjs",
-  "src/costEndpointThrottle.test.mjs"
+  "src/costEndpointThrottle.test.mjs",
+  "src/testSupport/spaceTle.mjs",
+  "src/layers/satelliteGroups/model.test.mjs",
+  "src/layers/satelliteGroups/index.test.mjs",
+  "src/layers/spaceWeather/records.test.mjs",
+  "src/layers/crewedStations/records.test.mjs",
+  "src/layers/reentries/records.test.mjs",
+  "src/layers/aurora/model.test.mjs"
 ]

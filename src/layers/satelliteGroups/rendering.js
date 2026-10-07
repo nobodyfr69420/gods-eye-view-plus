@@ -25,7 +25,13 @@ const TRACK_REFRESH_MS = 30_000;
 export function satrecFromTle(line1, line2) {
   try {
     const satrec = twoline2satrec(line1, line2);
-    return satrec && !satrec.error ? satrec : null;
+    return satrec &&
+      !satrec.error &&
+      [satrec.no, satrec.ecco, satrec.inclo, satrec.jdsatepoch].every(
+        Number.isFinite,
+      )
+      ? satrec
+      : null;
   } catch {
     return null;
   }

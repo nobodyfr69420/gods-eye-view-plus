@@ -358,6 +358,27 @@ export const DATA_CREDITS = [
       '<a href="https://www.submarinecablemap.com" target="_blank" rel="noopener">submarinecablemap.com</a> ' +
       '(CC BY-NC-SA 3.0 — NonCommercial)',
   },
+  // ── Space & sky (Lane 1) ───────────────────────────────────────
+  {
+    key: 'noaa-swpc',
+    html:
+      'Space weather, aurora oval (OVATION Prime): ' +
+      '<a href="https://www.swpc.noaa.gov" target="_blank" rel="noopener">NOAA Space Weather Prediction Center</a> ' +
+      '(US government, public domain)',
+  },
+  {
+    key: 'crew-rosters',
+    html:
+      'People in space (community-maintained): ' +
+      '<a href="http://open-notify.org" target="_blank" rel="noopener">Open Notify</a> · ' +
+      '<a href="https://github.com/corquaid/international-space-station-APIs" target="_blank" rel="noopener">corquaid ISS APIs</a>',
+  },
+  {
+    key: 'space-track',
+    html:
+      'Re-entry predictions (TIP, when configured): US Space Force via ' +
+      '<a href="https://www.space-track.org" target="_blank" rel="noopener">Space-Track.org</a>',
+  },
 ];
 
 /**

@@ -332,6 +332,39 @@ The fixed nowCOAST imagery and NHC advisory implementations are original maintai
 work; this acknowledgement does not represent merging those four PRs or equate
 NOAA density imagery with the raw GLM product.
 
+## Space and sky sources
+
+Lane 1 layers (Satellite Groups, Crewed Stations, Re-entries, Aurora Oval, Space
+Weather). Every source below is fetched at runtime through a same-origin, cached
+server provider; none of it is stored in the repository.
+
+| Source | Used for | License / terms | Attribution | Cache / rate |
+| --- | --- | --- | --- | --- |
+| **CelesTrak GP groups** (`celestrak.org/NORAD/elements/gp.php?GROUP=…`) | Satellite Groups categories (Starlink, OneWeb, Kuiper, Qianfan/Guowang, GNSS, weather, Earth observation, science/geodetic, amateur, military, comms, GEO, CubeSats, last 30 days), four debris fields, station TLEs, re-entry decay watch | US-government-origin data, no license; citation requested | "CelesTrak (celestrak.org), Dr. T.S. Kelso" | Existing `/api/celestrak` cache: 6 h memory+disk per group, single flight, stale copy served when CelesTrak is down (CelesTrak asks for ≤ 1 fetch per group per 2 h). Browsers re-ask the local cache at most every 30 min. |
+| **NOAA SWPC JSON** (`services.swpc.noaa.gov`): planetary Kp, 1-min estimated Kp, DSCOVR/ACE plasma + magnetometer (2 h), GOES primary X-rays (6 h), alerts, NOAA scales | Space Weather layer | US government work, public domain | "NOAA Space Weather Prediction Center" | `/api/space-weather`: each product at most every 2 min, retry after 1 min, last good copy served (flagged stale) for 6 h. |
+| **NOAA SWPC OVATION Prime** (`json/ovation_aurora_latest.json`) | Aurora Oval | US government work, public domain | "NOAA SWPC OVATION Prime" | `/api/space-weather/aurora`: at most every 5 min, stale copy for 3 h; reduced server-side to a 65,160-byte grid. |
+| **corquaid International Space Station APIs** (`people-in-space.json`, GitHub Pages) | Crew roster (names, agency, role, spacecraft) | Community-maintained open repository; public mission information only | "corquaid ISS APIs (community)" | `/api/space/crew`: 6 h, stale for 72 h. Images and social links are discarded. |
+| **Open Notify** (`api.open-notify.org/astros.json`) | Crew roster fallback (name + craft) | Community-maintained open API, no key | "Open Notify (community)" | Same cache; only used when the corquaid feed fails. |
+| **Space-Track.org TIP** (optional) | Official re-entry predictions (Tracking and Impact Prediction) | Free account; Space-Track User Agreement — data used locally by the account holder, not redistributed | "US Space Force via Space-Track.org" | `/api/space/reentries`: two requests (TIP + SATCAT names) at most once per hour, 15 min back-off after a failure — well under Space-Track's 30/min, 300/h limits. Disabled without `SPACETRACK_IDENTITY` / `SPACETRACK_PASSWORD`. |
+
+Honesty labels:
+
+- **Live (computed):** satellite and station positions are SGP4 propagations of
+  CelesTrak TLEs in the browser; every selection shows the TLE age. Accuracy
+  degrades with TLE age (kilometres per day for low orbits).
+- **Footprints** assume a spherical Earth and show the 0° and 10° elevation
+  horizons. **Passes** are computed for the point directly below the camera.
+- **Military** shows only objects in CelesTrak's public "miscellaneous military"
+  group; classified objects are absent from public catalogs.
+- **Crew counts** come from community rosters with no official machine-readable
+  equivalent; they can lag a crew rotation and are labelled as such.
+- **Decay watch** is ESTIMATED: objects whose current TLE perigee is below 200 km,
+  not a re-entry time or place. Only Space-Track TIP messages are predictions,
+  and even those carry a time window that spans thousands of kilometres of
+  ground track.
+- **Aurora** is a short-term (~30–90 min) probability of visible aurora; seeing it
+  also needs darkness and clear skies.
+
 ---
 
 ## In-app attribution
