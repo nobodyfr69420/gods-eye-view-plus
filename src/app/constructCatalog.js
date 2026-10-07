@@ -29,6 +29,7 @@ import { createInfrastructureLayers } from '../data/infrastructure.js';
 import { localGeoJsonServices } from './localGeojsonServices.js';
 import { createBhoteKoshiEventLayer } from '../data/bhoteKoshiEvent.js';
 import { createBhoteKoshiLocatorLayer } from '../data/bhoteKoshiLocator.js';
+import { createApplicationSpaceAndSky } from './layers/spaceAndSky.js';
 
 const SOURCE_METHODS = Object.freeze({
   flights: ['getSnapshot'],
@@ -55,6 +56,10 @@ const SOURCE_METHODS = Object.freeze({
   earthquakes: ['getSnapshot'],
   'fire-perimeters': ['getSnapshot'],
   cables: ['fetch'],
+  'satellite-groups': ['readGroup'],
+  'space-weather': ['getSnapshot', 'getAurora'],
+  crew: ['getSnapshot'],
+  reentries: ['getSnapshot'],
 });
 
 /**
@@ -191,6 +196,12 @@ export function createApplicationCatalog({
           icon: '▲',
           source: 'NASA FIRMS · LIVE',
           feed: sources.firms,
+        }),
+        ...createApplicationSpaceAndSky({
+          groups: sources['satellite-groups'],
+          spaceWeather: sources['space-weather'],
+          crew: sources.crew,
+          reentries: sources.reentries,
         }),
       ],
       metadata,

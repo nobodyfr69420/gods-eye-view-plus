@@ -76,7 +76,7 @@ export function celestrakProxy() {
         res.end('invalid group');
         return;
       }
-      const send = (status, body, cacheStatus) => {
+      const send = (status, body, cacheStatus, fetchedAt = null) => {
         // Guard against a double-send (e.g. a throw AFTER a response already
         // went out routing into the catch's send): writeHead after headersSent
         // throws "Cannot set headers after they are sent".
@@ -84,6 +84,10 @@ export function celestrakProxy() {
         res.writeHead(status, {
           'Content-Type': 'text/plain',
           'x-tle-cache': cacheStatus,
+          // When this copy left CelesTrak, so layers can show honest data age.
+          ...(Number.isFinite(fetchedAt)
+            ? { 'x-tle-fetched-at': new Date(fetchedAt).toISOString() }
+            : {}),
         });
         res.end(body);
       };
@@ -95,7 +99,7 @@ export function celestrakProxy() {
           if (entry) mem.set(group, entry);
         }
         if (entry && now - entry.at < TLE_TTL_MS) {
-          send(200, entry.body, 'HIT');
+          send(200, entry.body, 'HIT', entry.at);
           return;
         }
         // Stale or missing → refresh, single-flight per group.
@@ -119,9 +123,9 @@ export function celestrakProxy() {
         }
         const fresh = await inflight.get(group);
         if (fresh) {
-          send(200, fresh.body, 'MISS');
+          send(200, fresh.body, 'MISS', fresh.at);
         } else if (entry) {
-          send(200, entry.body, 'STALE-ERROR'); // upstream down — stale beats empty
+          send(200, entry.body, 'STALE-ERROR', entry.at); // upstream down — stale beats empty
         } else {
           send(502, 'celestrak fetch failed and no cache available', 'NONE');
         }

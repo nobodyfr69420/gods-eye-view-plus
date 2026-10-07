@@ -18,6 +18,10 @@ import { createCycloneSource } from '../layers/cyclones/source.js';
 import { createWindSource } from '../layers/wind/source.js';
 import { createFirmsSource } from '../layers/firms/source.js';
 import { createReferenceSources } from '../sources/reference.js';
+import { createSatelliteGroupSource } from '../layers/satelliteGroups/source.js';
+import { createSpaceWeatherSource } from '../layers/spaceWeather/source.js';
+import { createCrewSource } from '../layers/crewedStations/source.js';
+import { createReentrySource } from '../layers/reentries/source.js';
 export { createReferenceSources as createStandaloneReferenceSources } from '../sources/reference.js';
 
 /** Select standalone providers without starting their acquisition. */
@@ -46,5 +50,9 @@ export function createStandaloneLayerSources() {
     wind: createWindSource(),
     weather: createWeatherSource(),
     cyclones: createCycloneSource(),
+    'satellite-groups': createSatelliteGroupSource(),
+    'space-weather': createSpaceWeatherSource(),
+    crew: createCrewSource(),
+    reentries: createReentrySource(),
   };
 }
