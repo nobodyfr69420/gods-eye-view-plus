@@ -121,6 +121,16 @@ locked dependencies, finds a free local port, and opens the app.
 Version 8.2 fixes the launcher installation issue;
 [details from the Pinokio maintainer](https://pinokio.co/posts/01m1m4p9xxm3qw7dnnpj2wr93g).
 
+### Path 1b — One click from a clone (no Pinokio)
+
+In a cloned copy, double-click **`Start-GodsEyeView.cmd`** (Windows) or
+**`Start-GodsEyeView.command`** (macOS/Linux). It checks Node, installs
+dependencies on first run, creates `.env` (importing keys from any other
+install on the machine), starts the server, and opens the app in its own
+window. Close the launcher window to stop. Run `npm run shortcut` once to put a
+**God's Eye View** icon on your desktop. `npm start -- --lan` lets your phone's
+tracking app reach the [ME](docs/ME.md) endpoints on your Wi-Fi.
+
 ### Path 2 — Terminal / coding agent
 
 Use **Node.js 24.x (24.14.0 or later) or 26.x**. The setup doctor warns about

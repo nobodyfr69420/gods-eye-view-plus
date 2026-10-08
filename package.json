@@ -32,9 +32,12 @@
     "visualization"
   ],
   "scripts": {
+    "start": "node scripts/launch.mjs",
+    "shortcut": "node scripts/launch.mjs --shortcut",
     "doctor": "node scripts/setup-doctor.mjs",
     "keys": "node scripts/keys.mjs",
     "keys:setup": "node scripts/keys.mjs --setup",
+    "launcher:icon": "node scripts/build-launcher-icon.mjs",
     "format": "node scripts/format.mjs --write",
     "format:check": "node scripts/format.mjs --check",
     "layer-token:next": "node scripts/next-layer-state-token.mjs",

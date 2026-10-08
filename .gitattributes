@@ -18,3 +18,8 @@
 *.glb binary
 *.wav binary
 *.pbf binary
+
+# The Windows one-click launcher keeps CRLF so cmd.exe parses it reliably.
+*.cmd text eol=crlf
+*.command text eol=lf
+*.ico binary

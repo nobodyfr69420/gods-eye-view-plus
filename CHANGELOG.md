@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+- **One-click start.** Double-click `Start-GodsEyeView.cmd` (Windows) or
+  `Start-GodsEyeView.command` (macOS/Linux): it checks Node, installs
+  dependencies when missing or stale, creates `.env` on first run, reuses a
+  running server or starts one in-process, and opens the app in its own
+  Chrome/Edge window. `npm run shortcut` adds a desktop icon; `npm start --
+  --lan` exposes the ME endpoints to your phone on the same Wi-Fi.
+
 - **Maxed-out Overlay Library: 472 overlays in 22 categories.** Adds 186 overlays:
   62 more NASA GIBS layers (flood detection, GOES/Himawari fire-temperature,
   dust, air-mass and 1 km visible bands, TEMPO NO₂, AIRS CO₂/methane, OSCAR
